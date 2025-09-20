@@ -165,7 +165,6 @@
       updateRemoveButtons();
     });
 
-    // أول تحميل
     updateRemoveButtons();
 </script>
 @endsection
