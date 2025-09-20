@@ -3,7 +3,7 @@ name: Deploy Laravel to FTP
 on:
   push:
     branches:
-      - development # أو main لو عايز ترفع من main
+      - main # أو main لو عايز ترفع من main
 
 jobs:
   ftp-deploy:
