@@ -22,13 +22,19 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        $user->fill($request->validated());
+        $data = $request->validated();
+
+        if (empty($data['password'])) {
+            unset($data['password']);
+        }
+
+        $user->fill($data);
 
         if ($user->isDirty('email')) {
             $user->email_verified_at = null;
         }
 
-        if ($request->filled('password')) {
+        if (!empty($request->password)) {
             $user->password = bcrypt($request->password);
         }
 

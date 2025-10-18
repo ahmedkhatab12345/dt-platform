@@ -6,7 +6,7 @@
         <h2 class="text-2xl font-bold text-gray-800">إدارة التصنيفات</h2>
 
         {{-- زر إضافة تصنيف --}}
-        @can('create categories')
+       @can('create categories')
         <a href="{{ route('categories.create') }}"
            class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
            + إضافة تصنيف
