@@ -36,24 +36,28 @@ class ProjectController extends Controller
         Gate::authorize('create projects');
 
         $validated = $request->validate([
+            // الحقول المطلوبة فقط
             'name' => 'required|string|max:255',
-            'overview' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'budget' => 'required|numeric|min:0',
-            'status' => 'required|in:planned,in_progress,completed',
-            'department' => 'required|string|max:255',
-
-            // الحقول الجديدة
             'government_entity_id' => 'required|exists:government_entities,id',
             'standard_id' => 'required|exists:standards,id',
-
+    
+            // الباقي اختياري
+            'overview' => 'nullable|string',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'budget' => 'nullable|numeric|min:0',
+            'status' => 'nullable|in:planned,in_progress,completed',
+            'department' => 'nullable|string|max:255',
+    
+            // القوائم
             'indicators' => 'nullable|array',
-            'indicators.*' => 'string|max:255',
+            'indicators.*' => 'nullable|string|max:255',
+    
             'final_deliverables' => 'nullable|array',
-            'final_deliverables.*' => 'string|max:255',
+            'final_deliverables.*' => 'nullable|string|max:255',
+    
             'activities' => 'nullable|array',
-            'activities.*' => 'string|max:255',
+            'activities.*' => 'nullable|string|max:255',
         ]);
 
         Project::create($validated);
@@ -84,11 +88,11 @@ class ProjectController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'overview' => 'nullable|string',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'budget' => 'required|numeric|min:0',
-            'status' => 'required|in:planned,in_progress,completed',
-            'department' => 'required|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after:start_date',
+            'budget' => 'nullable|numeric|min:0',
+            'status' => 'nullable|in:planned,in_progress,completed',
+            'department' => 'nullable|string|max:255',
 
             // الحقول الجديدة
             'government_entity_id' => 'required|exists:government_entities,id',

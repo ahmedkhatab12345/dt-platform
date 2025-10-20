@@ -39,7 +39,7 @@ Route::get('/dashboard', function () {
     $totalStandards = Standard::count();
 
     return view('dashboard', compact('totalUsers', 'totalEntities', 'totalPillars', 'totalStandards'));
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

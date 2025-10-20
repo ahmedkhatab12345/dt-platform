@@ -44,7 +44,7 @@
           <tbody class="divide-y divide-gray-200 text-sm">
             @forelse($users as $user)
               <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3">{{ $user->id }}</td>
+                <td class="px-4 py-3 text-center">{{ $loop->iteration }}</td>
                 <td class="px-4 py-3 font-semibold truncate">{{ $user->name }}</td>
                 <td class="px-4 py-3 truncate">{{ $user->email }}</td>
                 <td class="px-4 py-3 truncate">{{ $user->phone ?? '-' }}</td>

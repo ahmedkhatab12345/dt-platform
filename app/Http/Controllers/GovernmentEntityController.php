@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\GovernmentEntityClassification;
 use App\Models\GovernmentEntity;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class GovernmentEntityController extends Controller
 {
@@ -17,9 +18,20 @@ class GovernmentEntityController extends Controller
         $this->middleware('permission:delete government_entities')->only('destroy');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $entities = GovernmentEntity::latest()->paginate(10);
+        $query = GovernmentEntity::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('uuid', 'like', "%{$search}%")
+                ->orWhere('name', 'like', "%{$search}%");
+            });
+        }
+
+        $entities = $query->orderBy('created_at', 'desc')->paginate(10);
+
         return view('government_entities.index', compact('entities'));
     }
 
@@ -32,11 +44,12 @@ class GovernmentEntityController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'uuid' => 'required|string|max:255|unique:government_entities,uuid',
             'name' => 'required|string|max:255',
             'classification' => 'required|string',
         ]);
 
-        GovernmentEntity::create($request->only('name','classification'));
+        GovernmentEntity::create($request->only('uuid','name','classification'));
 
         return redirect()->route('government_entities.index')->with('success','Entity created successfully.');
     }
@@ -53,23 +66,24 @@ class GovernmentEntityController extends Controller
     public function update(Request $request, GovernmentEntity $government_entity)
     {
         $request->validate([
+            'uuid' => ['required','string','max:255', Rule::unique('government_entities','uuid')->ignore($government_entity->id)],
             'name' => 'required|string|max:255',
             'classification' => 'required|string',
         ]);
 
-        $government_entity->update($request->only('name','classification'));
+        $government_entity->update($request->only('uuid','name','classification'));
 
         return redirect()->route('government_entities.index')->with('success','Entity updated successfully.');
     }
 
-    public function destroy(GovernmentEntity $entity)
+    public function destroy(GovernmentEntity $government_entity)
     {
-        if ($entity->assignments()->count() > 0) {
+        if ($government_entity->assignments()->count() > 0) {
             return redirect()->route('government_entities.index')
                 ->with('error', 'This government entity cannot be deleted because it is associated with assignments.');
         }
 
-        $entity->delete();
+        $government_entity->delete();
 
         return redirect()->route('government_entities.index')
             ->with('success','Government entity deleted successfully.');

@@ -10,6 +10,12 @@
     <form method="POST" action="{{ route('government_entities.store') }}" class="space-y-5">
         @csrf
 
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">المعرف الفريد (UUID)</label>
+            <input type="text" name="uuid" value="{{ old('uuid') }}" required
+                   class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500">
+          </div>
+
         {{-- الاسم --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>

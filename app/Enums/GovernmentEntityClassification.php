@@ -9,4 +9,5 @@ enum GovernmentEntityClassification: string
     case Improvement = 'Improvement';
     case Accessibility = 'Accessibility';
     case Building = 'Building';
+    case None = 'no classification';
 }

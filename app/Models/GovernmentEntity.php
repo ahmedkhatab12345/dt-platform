@@ -10,7 +10,7 @@ class GovernmentEntity extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','classification'];
+    protected $fillable = ['uuid','name','classification'];
 
     protected $casts = [
         'classification' => GovernmentEntityClassification::class,

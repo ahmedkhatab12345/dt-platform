@@ -4,22 +4,35 @@
 <div class="bg-white rounded-xl shadow p-6">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">الجهات الحكومية</h2>
-
-        {{-- إضافة جهة --}}
-        @can('create government_entities')
-        <a href="{{ route('government_entities.create') }}"
-           class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
-           + إضافة جهة
-        </a>
-        @endcan
-    </div>
+      
+        <div class="flex items-center gap-3">
+          {{-- فورم البحث --}}
+          <form method="GET" action="{{ route('government_entities.index') }}" class="flex items-center gap-2">
+            <input type="text" name="search" value="{{ request('search') }}"
+                   placeholder="ابحث بالـ UUID أو الاسم"
+                   class="border-gray-300 rounded-lg px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <button type="submit"
+                    class="px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 text-sm">
+              بحث
+            </button>
+          </form>
+      
+          {{-- زر الإضافة --}}
+          @can('create government_entities')
+          <a href="{{ route('government_entities.create') }}"
+             class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+             + إضافة جهة
+          </a>
+          @endcan
+        </div>
+      </div>
 
     <div class="overflow-x-auto">
       <table class="w-full table-fixed border-collapse bg-white rounded-lg shadow">
           <thead>
               <tr class="bg-gray-100 text-right text-sm text-gray-700 uppercase">
-                  <th class="px-4 py-3 w-12">#</th>
-                  <th class="px-4 py-3 w-1/3">الاسم</th>
+                <th class="px-4 py-3 w-1/6">المعرف الفريد (UUID)</th>
+                <th class="px-4 py-3 w-1/3">الاسم</th>
                   <th class="px-4 py-3 w-1/3">التصنيف</th>
                   <th class="px-4 py-3 w-1/6 text-center">الإجراءات</th>
               </tr>
@@ -27,8 +40,8 @@
           <tbody class="divide-y divide-gray-200 text-sm">
               @forelse($entities as $entity)
                   <tr class="hover:bg-gray-50">
-                      <td class="px-4 py-3 text-center">{{ $entity->id }}</td>
-                      <td class="px-4 py-3 truncate">{{ $entity->name }}</td>
+                    <td class="px-4 py-3 font-mono text-xs text-gray-600 truncate">{{ $entity->uuid }}</td>
+                    <td class="px-4 py-3 truncate">{{ $entity->name }}</td>
                       <td class="px-4 py-3 truncate">
                           <span class="px-2 py-1 text-xs font-semibold rounded-full bg-indigo-50 text-indigo-700">
                               {{ $entity->classification->name ?? $entity->classification->value }}

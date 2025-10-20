@@ -10,17 +10,6 @@
         تعديل المشروع: {{ $project->name }}
     </h2>
 
-    {{-- عرض الأخطاء --}}
-    @if ($errors->any())
-        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-            <ul class="list-disc list-inside text-sm">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
     <form method="POST" action="{{ route('projects.update', $project) }}" class="space-y-6">
         @csrf
         @method('PUT')
@@ -28,95 +17,112 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             {{-- اسم المشروع --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">اسم المشروع *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">اسم المشروع</label>
                 <input type="text"
                        name="name"
                        value="{{ old('name', $project->name) }}"
-                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                       required>
+                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
+                @error('name')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- الإدارة --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">الإدارة *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">الإدارة</label>
                 <input type="text"
                        name="department"
                        value="{{ old('department', $project->department) }}"
-                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                       required>
+                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
+                @error('department')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
+            {{-- الجهة الحكومية --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">الجهة الحكومية *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">الجهة الحكومية</label>
                 <select name="government_entity_id"
-                        class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                        required>
+                        class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
                     @foreach($entities as $entity)
                         <option value="{{ $entity->id }}" {{ old('government_entity_id', $project->government_entity_id) == $entity->id ? 'selected' : '' }}>
                             {{ $entity->name }}
                         </option>
                     @endforeach
                 </select>
+                @error('government_entity_id')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- المعيار --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">المعيار *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">المعيار</label>
                 <select name="standard_id"
-                        class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                        required>
+                        class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
                     @foreach($standards as $std)
                         <option value="{{ $std->id }}" {{ old('standard_id', $project->standard_id) == $std->id ? 'selected' : '' }}>
                             {{ $std->name }}
                         </option>
                     @endforeach
                 </select>
+                @error('standard_id')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- تاريخ البداية --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">تاريخ البداية *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">تاريخ البداية</label>
                 <input type="date"
-                       name="start_date"
-                       value="{{ old('start_date', $project->start_date->format('Y-m-d')) }}"
-                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                       required>
+                    name="start_date"
+                    value="{{ old('start_date', optional($project->start_date)->format('Y-m-d')) }}"
+                    class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
+                @error('start_date')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- تاريخ النهاية --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">تاريخ النهاية *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">تاريخ النهاية</label>
                 <input type="date"
-                       name="end_date"
-                       value="{{ old('end_date', $project->end_date->format('Y-m-d')) }}"
-                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                       required>
+                    name="end_date"
+                    value="{{ old('end_date', optional($project->end_date)->format('Y-m-d')) }}"
+                    class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
+                @error('end_date')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- الميزانية --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">الميزانية (ريال سعودي) *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">الميزانية (ريال سعودي)</label>
                 <input type="number"
                        name="budget"
                        value="{{ old('budget', $project->budget) }}"
                        step="0.01"
                        min="0"
-                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                       required>
+                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
+                @error('budget')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
 
             {{-- الحالة --}}
             <div>
-                <label class="block font-medium text-sm text-gray-700 mb-1">الحالة *</label>
+                <label class="block font-medium text-sm text-gray-700 mb-1">الحالة</label>
                 <select name="status"
-                        class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                        required>
+                        class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
                     @foreach(\App\Models\Project::getStatuses() as $key => $label)
                         <option value="{{ $key }}" {{ old('status', $project->status) == $key ? 'selected' : '' }}>
                             {{ $label }}
                         </option>
                     @endforeach
                 </select>
+                @error('status')
+                  <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+                @enderror
             </div>
         </div>
 
@@ -126,31 +132,28 @@
             <textarea name="overview"
                       class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
                       rows="4">{{ old('overview', $project->overview) }}</textarea>
+            @error('overview')
+              <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            @enderror
         </div>
 
         {{-- المؤشرات --}}
         <div>
             <label class="block font-medium text-sm text-gray-700 mb-2">المؤشرات</label>
             <div id="indicators-container">
-                @if($project->indicators && count($project->indicators) > 0)
-                    @foreach($project->indicators as $indicator)
-                        <div class="flex gap-2 mb-2">
-                            <input type="text"
-                                   name="indicators[]"
-                                   value="{{ $indicator }}"
-                                   class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
-                            <button type="button" onclick="removeIndicator(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
-                        </div>
-                    @endforeach
-                @else
+                @forelse($project->indicators ?? [] as $indicator)
                     <div class="flex gap-2 mb-2">
-                        <input type="text"
-                               name="indicators[]"
-                               class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                               placeholder="أدخل مؤشر">
+                        <input type="text" name="indicators[]" value="{{ $indicator }}"
+                               class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
+                        <button type="button" onclick="removeIndicator(this)"
+                                class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
+                    </div>
+                @empty
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" name="indicators[]" class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل مؤشر">
                         <button type="button" onclick="removeIndicator(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
                     </div>
-                @endif
+                @endforelse
             </div>
             <button type="button" onclick="addIndicator()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
                 + إضافة مؤشر
@@ -161,25 +164,19 @@
         <div>
             <label class="block font-medium text-sm text-gray-700 mb-2">المخرجات النهائية</label>
             <div id="deliverables-container">
-                @if($project->final_deliverables && count($project->final_deliverables) > 0)
-                    @foreach($project->final_deliverables as $deliverable)
-                        <div class="flex gap-2 mb-2">
-                            <input type="text"
-                                   name="final_deliverables[]"
-                                   value="{{ $deliverable }}"
-                                   class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
-                            <button type="button" onclick="removeDeliverable(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
-                        </div>
-                    @endforeach
-                @else
+                @forelse($project->final_deliverables ?? [] as $deliverable)
                     <div class="flex gap-2 mb-2">
-                        <input type="text"
-                               name="final_deliverables[]"
-                               class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                               placeholder="أدخل مخرج نهائي">
+                        <input type="text" name="final_deliverables[]" value="{{ $deliverable }}"
+                               class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2">
+                        <button type="button" onclick="removeDeliverable(this)"
+                                class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
+                    </div>
+                @empty
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" name="final_deliverables[]" class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل مخرج نهائي">
                         <button type="button" onclick="removeDeliverable(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
                     </div>
-                @endif
+                @endforelse
             </div>
             <button type="button" onclick="addDeliverable()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
                 + إضافة مخرج نهائي
@@ -190,25 +187,19 @@
         <div>
             <label class="block font-medium text-sm text-gray-700 mb-2">الأنشطة</label>
             <div id="activities-container">
-                @if($project->activities && count($project->activities) > 0)
-                    @foreach($project->activities as $activity)
-                        <div class="flex gap-2 mb-2">
-                            <input type="text"
-                                   name="activities[]"
-                                   value="{{ $activity }}"
-                                   class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
-                            <button type="button" onclick="removeActivity(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
-                        </div>
-                    @endforeach
-                @else
+                @forelse($project->activities ?? [] as $activity)
                     <div class="flex gap-2 mb-2">
-                        <input type="text"
-                               name="activities[]"
-                               class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                               placeholder="أدخل نشاط">
+                        <input type="text" name="activities[]" value="{{ $activity }}"
+                               class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2">
+                        <button type="button" onclick="removeActivity(this)"
+                                class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
+                    </div>
+                @empty
+                    <div class="flex gap-2 mb-2">
+                        <input type="text" name="activities[]" class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل نشاط">
                         <button type="button" onclick="removeActivity(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
                     </div>
-                @endif
+                @endforelse
             </div>
             <button type="button" onclick="addActivity()" class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm">
                 + إضافة نشاط
@@ -235,44 +226,35 @@ function addIndicator() {
     const div = document.createElement('div');
     div.className = 'flex gap-2 mb-2';
     div.innerHTML = `
-        <input type="text" name="indicators[]" class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل مؤشر">
+        <input type="text" name="indicators[]" class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل مؤشر">
         <button type="button" onclick="removeIndicator(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
     `;
     container.appendChild(div);
 }
-
-function removeIndicator(button) {
-    button.parentElement.remove();
-}
+function removeIndicator(button) { button.parentElement.remove(); }
 
 function addDeliverable() {
     const container = document.getElementById('deliverables-container');
     const div = document.createElement('div');
     div.className = 'flex gap-2 mb-2';
     div.innerHTML = `
-        <input type="text" name="final_deliverables[]" class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل مخرج نهائي">
+        <input type="text" name="final_deliverables[]" class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل مخرج نهائي">
         <button type="button" onclick="removeDeliverable(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
     `;
     container.appendChild(div);
 }
-
-function removeDeliverable(button) {
-    button.parentElement.remove();
-}
+function removeDeliverable(button) { button.parentElement.remove(); }
 
 function addActivity() {
     const container = document.getElementById('activities-container');
     const div = document.createElement('div');
     div.className = 'flex gap-2 mb-2';
     div.innerHTML = `
-        <input type="text" name="activities[]" class="flex-1 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل نشاط">
+        <input type="text" name="activities[]" class="flex-1 border-gray-300 rounded-lg shadow-sm px-3 py-2" placeholder="أدخل نشاط">
         <button type="button" onclick="removeActivity(this)" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600">حذف</button>
     `;
     container.appendChild(div);
 }
-
-function removeActivity(button) {
-    button.parentElement.remove();
-}
+function removeActivity(button) { button.parentElement.remove(); }
 </script>
 @endsection

@@ -36,7 +36,7 @@
       <tbody class="divide-y divide-gray-200 text-sm">
         @forelse($assignments as $assign)
           <tr class="hover:bg-gray-50">
-            <td class="px-4 py-3 text-center">{{ $assign->id }}</td>
+            <td class="px-4 py-3 text-center">{{ $loop->iteration }}</td>
             <td class="px-4 py-3 truncate">{{ $assign->standard?->name }}</td>
             <td class="px-4 py-3 truncate">{{ $assign->tool?->name }}</td>
             <td class="px-4 py-3 truncate">{{ $assign->governmentEntity?->name }}</td>

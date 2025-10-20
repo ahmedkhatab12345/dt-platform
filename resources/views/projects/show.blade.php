@@ -47,8 +47,10 @@
         <div class="p-4 bg-gray-50 rounded-lg">
             <p class="text-sm text-gray-600">الفترة</p>
             <p class="font-semibold text-gray-800">
-                {{ $project->start_date->format('Y-m-d') }} - {{ $project->end_date->format('Y-m-d') }}
-            </p>
+                {{ optional($project->start_date)->format('Y-m-d') ?? '—' }}
+                -
+                {{ optional($project->end_date)->format('Y-m-d') ?? '—' }}
+            </p>            
         </div>
         <div class="p-4 bg-gray-50 rounded-lg">
             <p class="text-sm text-gray-600">الميزانية</p>

@@ -50,10 +50,10 @@
                         <td class="px-4 py-3 truncate">{{ $project->governmentEntity?->name }}</td>
                         <td class="px-4 py-3 truncate">{{ $project->standard?->name }}</td>
                         <td class="px-4 py-3 truncate">
-                            {{ $project->start_date->format('Y-m-d') }}
+                            {{ optional($project->start_date)->format('Y-m-d') ?? '—' }}
                             -
-                            {{ $project->end_date->format('Y-m-d') }}
-                        </td>
+                            {{ optional($project->end_date)->format('Y-m-d') ?? '—' }}
+                        </td>                        
                         <td class="px-4 py-3 truncate">{{ number_format($project->budget,2) }} ريال</td>
                         <td class="px-4 py-3">
                             <span class="px-2 py-1 text-xs rounded

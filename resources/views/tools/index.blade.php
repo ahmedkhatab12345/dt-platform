@@ -54,7 +54,7 @@
           <tbody class="divide-y divide-gray-200 text-sm">
             @forelse($tools as $tool)
               <tr class="hover:bg-gray-50">
-                <td class="px-4 py-3">{{ $tool->id }}</td>
+                <td class="px-4 py-3 text-center">{{ $loop->iteration }}</td>
                 <td class="px-4 py-3 font-semibold truncate">{{ $tool->name }}</td>
                 <td class="px-4 py-3 truncate">{{ $tool->description ?? '-' }}</td>
                 <td class="px-4 py-3 truncate">

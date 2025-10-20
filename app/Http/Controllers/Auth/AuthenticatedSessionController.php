@@ -34,12 +34,12 @@ class AuthenticatedSessionController extends Controller
             ]);
         }
 
-        if (! Auth::user()->hasVerifiedEmail()) {
-            $user = Auth::user();
-            Auth::logout();
-            $user->sendEmailVerificationNotification();
-            return back()->withErrors(['email' => 'Email not verified. A new verification link was sent.']);
-        }
+        // if (! Auth::user()->hasVerifiedEmail()) {
+        //     $user = Auth::user();
+        //     Auth::logout();
+        //     $user->sendEmailVerificationNotification();
+        //     return back()->withErrors(['email' => 'Email not verified. A new verification link was sent.']);
+        // }
 
         $request->session()->regenerate();
 

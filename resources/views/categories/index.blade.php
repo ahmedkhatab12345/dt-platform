@@ -34,8 +34,8 @@
           <tbody class="divide-y divide-gray-200 text-sm">
               @forelse($categories as $category)
                   <tr class="hover:bg-gray-50">
-                      <td class="px-4 py-3 text-center">{{ $category->id }}</td>
-                      <td class="px-4 py-3 font-semibold text-gray-800 truncate">{{ $category->name }}</td>
+                    <td class="px-4 py-3 text-center">{{ $loop->iteration }}</td>
+                    <td class="px-4 py-3 font-semibold text-gray-800 truncate">{{ $category->name }}</td>
                       <td class="px-4 py-3 truncate">{{ $category->description ?? '-' }}</td>
                       <td class="px-4 py-3 text-center whitespace-nowrap flex justify-center gap-2">
 
