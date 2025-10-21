@@ -36,34 +36,29 @@ class ProjectController extends Controller
         Gate::authorize('create projects');
 
         $validated = $request->validate([
-            // الحقول المطلوبة فقط
             'name' => 'required|string|max:255',
             'government_entity_id' => 'required|exists:government_entities,id',
             'standard_id' => 'required|exists:standards,id',
-    
-            // الباقي اختياري
             'overview' => 'nullable|string',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'budget' => 'nullable|numeric|min:0',
             'status' => 'nullable|in:planned,in_progress,completed',
             'department' => 'nullable|string|max:255',
-    
-            // القوائم
             'indicators' => 'nullable|array',
             'indicators.*' => 'nullable|string|max:255',
-    
             'final_deliverables' => 'nullable|array',
             'final_deliverables.*' => 'nullable|string|max:255',
-    
             'activities' => 'nullable|array',
             'activities.*' => 'nullable|string|max:255',
         ]);
 
         Project::create($validated);
 
-        return redirect()->route('projects.index')
+        return redirect()
+            ->route('projects.create', ['government_entity_id' => $validated['government_entity_id']])
             ->with('success', 'تم إنشاء المشروع بنجاح');
+
     }
 
     public function show(Project $project)

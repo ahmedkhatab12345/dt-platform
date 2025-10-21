@@ -6,6 +6,9 @@
   @vite('resources/css/app.css')
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://unpkg.com/feather-icons"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
 </head>
 <body class="bg-gray-100 font-sans antialiased" dir="rtl">
   <div class="min-h-screen flex flex-row-reverse">
@@ -62,6 +65,12 @@
           <i data-feather="home" class="w-4 h-4"></i> الرئيسية
         </a>
 
+        @can('read projects')
+        <a href="{{ route('projects.index') }}"
+           class="flex flex-row-reverse items-center gap-2 justify-end px-3 py-2 rounded hover:bg-indigo-700 {{ request()->routeIs('projects.*') ? 'bg-indigo-700' : '' }}">
+          <i data-feather="folder" class="w-4 h-4"></i> المشاريع
+        </a>
+        @endcan
 
         @can('read roles')
         <a href="{{ route('roles.index') }}"
@@ -130,14 +139,6 @@
           <i data-feather="shuffle" class="w-4 h-4"></i> اسناد الادوات
         </a>
         @endcan
-
-        @can('read projects')
-        <a href="{{ route('projects.index') }}"
-           class="flex flex-row-reverse items-center gap-2 justify-end px-3 py-2 rounded hover:bg-indigo-700 {{ request()->routeIs('projects.*') ? 'bg-indigo-700' : '' }}">
-          <i data-feather="folder" class="w-4 h-4"></i> المشاريع
-        </a>
-        @endcan
-
       </nav>
 
       <div class="p-4 border-t border-indigo-700">

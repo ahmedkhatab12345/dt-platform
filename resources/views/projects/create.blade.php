@@ -9,6 +9,11 @@
     <i data-feather="folder-plus" class="w-6 h-6 text-indigo-600"></i>
     إضافة مشروع جديد
   </h2>
+  @if (session('success'))
+  <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+      {{ session('success') }}
+  </div>
+@endif
 
   <form method="POST" action="{{ route('projects.store') }}" class="space-y-6">
     @csrf
@@ -16,7 +21,9 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {{-- اسم المشروع --}}
       <div>
-        <label class="block font-medium text-sm text-gray-700 mb-1">اسم المشروع</label>
+        <label class="block font-medium text-sm text-gray-700 mb-1">
+          اسم المشروع  <span class="text-red-600">*</span>
+        </label>       
         <input type="text" name="name" value="{{ old('name') }}"
                class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
                placeholder="أدخل اسم المشروع">
@@ -38,16 +45,21 @@
 
       {{-- الجهة الحكومية --}}
       <div>
-        <label class="block font-medium text-sm text-gray-700 mb-1">الجهة الحكومية</label>
-        <select name="government_entity_id"
+        <label class="block font-medium text-sm text-gray-700 mb-1">
+          الجهة الحكومية <span class="text-red-600">*</span>
+        </label>
+
+        <select id="government_entity_id" name="government_entity_id"
                 class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
-          <option value="">اختر الجهة</option>
-          @foreach($entities as $entity)
-            <option value="{{ $entity->id }}" {{ old('government_entity_id') == $entity->id ? 'selected' : '' }}>
-              {{ $entity->name }}
-            </option>
-          @endforeach
+            <option value="">اختر الجهة</option>
+            @foreach($entities as $entity)
+              <option value="{{ $entity->id }}" 
+                {{ old('government_entity_id', $project->government_entity_id ?? request('government_entity_id')) == $entity->id ? 'selected' : '' }}>
+                {{ $entity->name .' - '. $entity->uuid }}
+              </option>
+            @endforeach
         </select>
+
         @error('government_entity_id')
           <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
         @enderror
@@ -55,8 +67,10 @@
 
       {{-- المعيار --}}
       <div>
-        <label class="block font-medium text-sm text-gray-700 mb-1">المعيار</label>
-        <select name="standard_id"
+        <label class="block font-medium text-sm text-gray-700 mb-1">
+          المعيار <span class="text-red-600">*</span>
+        </label>
+          <select name="standard_id"
                 class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
           <option value="">اختر المعيار</option>
           @foreach($standards as $std)
@@ -226,5 +240,23 @@ function addActivity() {
 }
 
 function removeActivity(button) { button.parentElement.remove(); }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    new TomSelect("#government_entity_id", {
+      create: false, // منع الإضافة اليدوية
+      sortField: {
+        field: "text",
+        direction: "asc"
+      },
+      placeholder: "ابحث بالاسم أو الكود...",
+      maxOptions: 2000, // لو عندك جهات كتير
+      render: {
+        option: function(data, escape) {
+          return `<div>${escape(data.text)}</div>`;
+        }
+      }
+    });
+  });
+
 </script>
 @endsection
