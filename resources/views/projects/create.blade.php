@@ -84,25 +84,79 @@
         @enderror
       </div>
 
-      {{-- تاريخ البداية --}}
+     {{-- تاريخ البداية --}}
       <div>
         <label class="block font-medium text-sm text-gray-700 mb-1">تاريخ البداية</label>
-        <input type="date" name="start_date" value="{{ old('start_date') }}"
-               class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
-        @error('start_date')
-          <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-        @enderror
+        <div class="flex gap-2">
+          {{-- الشهر --}}
+          <select name="start_month"
+                  class="w-1/2 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 custom-select text-center">
+            @for ($month = 1; $month <= 12; $month++)
+              <option value="{{ $month }}" {{ old('start_month') == $month ? 'selected' : '' }}>
+                {{ $month }}
+              </option>
+            @endfor
+          </select>
+
+          {{-- السنة --}}
+          <select name="start_year"
+                  class="w-1/2 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 custom-select text-center">
+            @for ($year = 2020; $year <= 2030; $year++)
+              <option value="{{ $year }}" {{ old('start_year') == $year ? 'selected' : '' }}>
+                {{ $year }}
+              </option>
+            @endfor
+          </select>
+        </div>
+        @error('start_month') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+        @error('start_year') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
       </div>
 
       {{-- تاريخ النهاية --}}
       <div>
         <label class="block font-medium text-sm text-gray-700 mb-1">تاريخ النهاية</label>
-        <input type="date" name="end_date" value="{{ old('end_date') }}"
-               class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2">
-        @error('end_date')
-          <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
-        @enderror
+        <div class="flex gap-2">
+          {{-- الشهر --}}
+          <select name="end_month"
+                  class="w-1/2 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 custom-select text-center">
+            @for ($month = 1; $month <= 12; $month++)
+              <option value="{{ $month }}" {{ old('end_month') == $month ? 'selected' : '' }}>
+                {{ $month }}
+              </option>
+            @endfor
+          </select>
+
+          {{-- السنة --}}
+          <select name="end_year"
+                  class="w-1/2 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 custom-select text-center">
+            @for ($year = 2020; $year <= 2030; $year++)
+              <option value="{{ $year }}" {{ old('end_year') == $year ? 'selected' : '' }}>
+                {{ $year }}
+              </option>
+            @endfor
+          </select>
+        </div>
+        @error('end_month') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
+        @error('end_year') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
       </div>
+
+      <style>
+        .custom-select {
+          appearance: none;
+          text-align: center;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%236b7280' d='M0 0l5 6 5-6z'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 0.75rem center; 
+          background-size: 1rem auto;
+          padding-right: 2rem;
+        }
+
+        [dir="rtl"] .custom-select {
+          background-position: left 0.75rem center; 
+          padding-left: 2rem;
+          padding-right: 0.75rem;
+        }
+      </style>
 
       {{-- الميزانية --}}
       <div>
