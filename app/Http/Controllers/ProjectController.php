@@ -15,12 +15,29 @@ class ProjectController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         Gate::authorize('read projects');
 
-        $projects = Project::latest()->paginate(10);
-        return view('projects.index', compact('projects'));
+        $entities  = GovernmentEntity::orderBy('name')->get();
+        $projects = Project::query()
+            ->with(['governmentEntity', 'standard'])
+            ->when($request->filled('q'), function ($q) use ($request) {
+                $term = trim($request->q);
+                $q->where('name', 'like', '%' . $term . '%');
+            })
+            ->when($request->filled('government_entity_id'), function ($q) use ($request) {
+                $q->where('government_entity_id', $request->integer('government_entity_id'));
+            })
+            ->latest()
+            ->paginate(10)
+            ->appends($request->query());
+
+        return view('projects.index', [
+            'projects' => $projects,
+            'entities' => $entities,
+            'selectedGovernmentEntityId' => $request->integer('government_entity_id'),
+        ]);
     }
 
     public function create()
