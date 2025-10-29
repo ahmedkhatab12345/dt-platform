@@ -22,7 +22,8 @@ class Project extends Model
         'final_deliverables',
         'activities',
         'government_entity_id',
-        'standard_id'
+        'standard_id',
+        'created_by',
     ];
 
     protected $casts = [
@@ -66,5 +67,10 @@ class Project extends Model
     public function standard()
     {
         return $this->belongsTo(Standard::class);
+    }
+ 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

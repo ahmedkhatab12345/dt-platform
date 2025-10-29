@@ -19,15 +19,19 @@ class ProjectController extends Controller
     {
         Gate::authorize('read projects');
 
-        $entities  = GovernmentEntity::orderBy('name')->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
+
         $projects = Project::query()
-            ->with(['governmentEntity', 'standard'])
+            ->with(['governmentEntity', 'standard', 'user'])
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = trim($request->q);
                 $q->where('name', 'like', '%' . $term . '%');
             })
             ->when($request->filled('government_entity_id'), function ($q) use ($request) {
                 $q->where('government_entity_id', $request->integer('government_entity_id'));
+            })
+            ->when($request->filled('status'), function ($q) use ($request) {
+                $q->where('status', $request->status);
             })
             ->latest()
             ->paginate(10)
@@ -37,6 +41,7 @@ class ProjectController extends Controller
             'projects' => $projects,
             'entities' => $entities,
             'selectedGovernmentEntityId' => $request->integer('government_entity_id'),
+            'selectedStatus' => $request->input('status'),
         ]);
     }
 
@@ -51,7 +56,6 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         Gate::authorize('create projects');
-
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'government_entity_id' => 'required|exists:government_entities,id',
@@ -76,6 +80,7 @@ class ProjectController extends Controller
         $validated['end_date'] = "{$validated['end_year']}-{$validated['end_month']}-01";
         
         unset($validated['start_year'], $validated['start_month'], $validated['end_year'], $validated['end_month']);
+        $validated['created_by'] = auth()->id();
         
         Project::create($validated);
         

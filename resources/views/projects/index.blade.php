@@ -45,15 +45,28 @@
         </select>
       </div>
 
+      <div>
+        <label for="status" class="block text-sm text-gray-700 mb-1">الحالة</label>
+        <select id="status" name="status"
+                class="w-64 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <option value="">-- الكل --</option>
+          @foreach(\App\Models\Project::getStatuses() as $key => $label)
+            <option value="{{ $key }}" @selected(request('status') === $key)>
+              {{ $label }}
+            </option>
+          @endforeach
+        </select>
+      </div>      
+
       <div class="flex items-center gap-2">
         <button type="submit"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
           بحث / تصفية
         </button>
 
-        @if(request()->filled('q') || request()->filled('government_entity_id'))
+        @if(request()->filled('q') || request()->filled('government_entity_id') || request()->filled('status'))
           <a href="{{ route('projects.index') }}"
-             class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
             إعادة تعيين
           </a>
         @endif
@@ -81,6 +94,8 @@
           <th class="px-4 py-3">الفترة</th>
           <th class="px-4 py-3">الميزانية</th>
           <th class="px-4 py-3">الحالة</th>
+          <th class="px-4 py-3">تاريخ الإنشاء</th>
+          <th class="px-4 py-3">المنشئ</th>
           <th class="px-4 py-3 text-center">الإجراءات</th>
         </tr>
       </thead>
@@ -109,6 +124,12 @@
                 @else bg-gray-100 text-gray-600 @endif">
                 {{ \App\Models\Project::getStatuses()[$project->status] ?? $project->status }}
               </span>
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              {{ $project->created_at?->format('Y-m-d') ?? '—' }}
+            </td>
+            <td class="px-4 py-3 whitespace-nowrap">
+              {{ $project->user?->name ?? '—' }}
             </td>
             <td class="px-4 py-3 text-center">
               <div class="flex justify-center gap-2">
