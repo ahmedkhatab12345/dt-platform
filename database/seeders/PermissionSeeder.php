@@ -23,7 +23,8 @@ class PermissionSeeder extends Seeder
             'pillars',
             'standards',
             'tools',
-            'assignments'
+            'assignments',
+            'performance_analysis',
         ];
 
         $actions = ['create', 'read', 'update', 'delete'];

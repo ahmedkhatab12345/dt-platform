@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Perspective;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -48,6 +49,14 @@ class PerspectiveController extends Controller
 
         Perspective::create($r->only('uuid','name','description'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created',
+            'model' => 'perspectives',
+            'description' => 'تم إنشاء منظور جديد باسم ' . $r->name,
+        ]);
+
+
         return redirect()->route('perspectives.index')->with('success','Created.');
     }
 
@@ -66,6 +75,13 @@ class PerspectiveController extends Controller
 
         $perspective->update($r->only('uuid','name','description'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated',
+            'model' => 'perspectives',
+            'description' => 'تم تعديل منظور باسم ' . $perspective->name,
+        ]);
+
         return redirect()->route('perspectives.index')->with('success','Updated.');
     }
 
@@ -76,7 +92,16 @@ class PerspectiveController extends Controller
                 ->with('error', 'This perspective cannot be deleted because it is associated with pillars.');
         }
 
+        $name = $perspective->name;
         $perspective->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'model' => 'perspectives',
+            'description' => 'تم حذف منظور باسم ' . $name,
+        ]);
+        
         return redirect()->route('perspectives.index')->with('success','Perspective deleted successfully.');
     }
 }

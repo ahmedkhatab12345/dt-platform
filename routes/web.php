@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminRolePermissionController;
 use App\Http\Controllers\AssignmentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GovernmentEntityController;
+use App\Http\Controllers\PerformanceAnalysisController;
 use App\Http\Controllers\PerspectiveController;
 use App\Http\Controllers\PillarController;
 use App\Http\Controllers\ProfileController;
@@ -58,6 +59,10 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::resource('tools', ToolController::class);
     Route::resource('assignments', AssignmentController::class);
+    Route::get('/performance_analysis/export', [PerformanceAnalysisController::class, 'export'])
+    ->name('performance_analysis.export');
+
+    Route::resource('performance_analysis', PerformanceAnalysisController::class)->except(['show']);
 });
 
 require __DIR__.'/auth.php';

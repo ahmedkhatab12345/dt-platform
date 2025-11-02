@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\GovernmentEntityClassification;
+use App\Models\ActivityLog;
 use App\Models\GovernmentEntity;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -51,6 +52,13 @@ class GovernmentEntityController extends Controller
 
         GovernmentEntity::create($request->only('uuid','name','classification'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created',
+            'model' => 'government_entities',
+            'description' => 'تم إنشاء جهة حكومية جديدة باسم ' . $request->name,
+        ]);
+
         return redirect()->route('government_entities.index')->with('success','Entity created successfully.');
     }
 
@@ -73,6 +81,13 @@ class GovernmentEntityController extends Controller
 
         $government_entity->update($request->only('uuid','name','classification'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated',
+            'model' => 'government_entities',
+            'description' => 'تم تعديل الجهة الحكومية باسم ' . $government_entity->name,
+        ]);
+
         return redirect()->route('government_entities.index')->with('success','Entity updated successfully.');
     }
 
@@ -84,6 +99,13 @@ class GovernmentEntityController extends Controller
         }
 
         $government_entity->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'model' => 'government_entities',
+            'description' => 'تم حذف الجهة الحكومية باسم ' . $government_entity,
+        ]);
 
         return redirect()->route('government_entities.index')
             ->with('success','Government entity deleted successfully.');

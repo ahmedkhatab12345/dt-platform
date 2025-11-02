@@ -191,6 +191,14 @@
           <i data-feather="shuffle" class="w-4 h-4"></i> إسناد الأدوات
         </a>
         @endcan
+
+        @can('read performance_analysis')
+        <a href="{{ route('performance_analysis.index') }}"
+          class="flex flex-row-reverse items-center justify-end gap-2 px-3 py-2 rounded hover:bg-indigo-700 {{ request()->routeIs('performance_analysis.*') ? 'bg-indigo-700' : '' }}">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i> تحليل الأداء
+        </a>
+        @endcan
+
       </nav>
 
       {{-- زر تسجيل الخروج --}}

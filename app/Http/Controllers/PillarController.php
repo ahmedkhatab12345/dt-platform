@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Perspective;
 use App\Models\Pillar;
 use Illuminate\Http\Request;
@@ -55,6 +56,14 @@ class PillarController extends Controller
 
         Pillar::create($r->only('uuid','perspective_id','name','description'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created',
+            'model' => 'pillars',
+            'description' => 'تم إنشاء محور جديد باسم ' . $r->name,
+        ]);
+
+
         return redirect()->route('pillars.index')->with('success','Created.');
     }
 
@@ -75,6 +84,13 @@ class PillarController extends Controller
 
         $pillar->update($r->only('uuid','perspective_id','name','description'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated',
+            'model' => 'pillars',
+            'description' => 'تم تعديل  محور باسم ' . $pillar->name,
+        ]);
+
         return redirect()->route('pillars.index')->with('success','Updated.');
     }
 
@@ -86,6 +102,12 @@ class PillarController extends Controller
         }
 
         $pillar->delete();
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'model' => 'pillars',
+            'description' => 'تم حذف محور باسم ' . $pillar,
+        ]);
         return redirect()->route('pillars.index')->with('success','Pillar deleted successfully.');
     }
 }

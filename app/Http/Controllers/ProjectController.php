@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\GovernmentEntity;
 use App\Models\Project;
 use App\Models\Standard;
@@ -83,6 +84,13 @@ class ProjectController extends Controller
         $validated['created_by'] = auth()->id();
         
         Project::create($validated);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created',
+            'model' => 'projects',
+            'description' => 'تم إنشاء مشروع جديد باسم ' . $request->name,
+        ]);
         
         return redirect()
             ->route('projects.create', ['government_entity_id' => $validated['government_entity_id']])
@@ -147,6 +155,13 @@ class ProjectController extends Controller
         $validated['activities'] = array_filter($validated['activities'] ?? []);
     
         $project->update($validated);
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated',
+            'model' => 'projects',
+            'description' => 'تم تعديل مشروع باسم ' . $project->name,
+        ]);
     
         return redirect()->route('projects.index')
             ->with('success', 'تم تحديث المشروع بنجاح');
@@ -157,6 +172,13 @@ class ProjectController extends Controller
         Gate::authorize('delete projects');
 
         $project->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'model' => 'projects',
+            'description' => 'تم حذف مشروع باسم ' . $project,
+        ]);
 
         return redirect()->route('projects.index')
             ->with('success', 'تم حذف المشروع بنجاح');

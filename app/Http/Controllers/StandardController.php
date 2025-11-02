@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ActivityLog;
 use App\Models\Pillar;
 use App\Models\Standard;
 use Illuminate\Http\Request;
@@ -59,6 +60,13 @@ class StandardController extends Controller
 
         Standard::create($r->only('uuid', 'pillar_id', 'name', 'criteria', 'weight'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'created',
+            'model' => 'standards',
+            'description' => 'تم إنشاء معيار جديد باسم ' . $r->name,
+        ]);
+
         return redirect()->route('standards.index')->with('success','Created.');
     }
 
@@ -83,6 +91,13 @@ class StandardController extends Controller
 
         $standard->update($r->only('uuid', 'pillar_id', 'name', 'criteria', 'weight'));
 
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'updated',
+            'model' => 'standards',
+            'description' => 'تم تعديل معيار باسم ' . $standard->name,
+        ]);
+
         return redirect()->route('standards.index')->with('success','Updated.');
     }
 
@@ -94,6 +109,13 @@ class StandardController extends Controller
         }
 
         $standard->delete();
+
+        ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'deleted',
+            'model' => 'standards',
+            'description' => 'تم حذف معيار باسم ' . $standard,
+        ]);
         return redirect()->route('standards.index')->with('success','Standard deleted successfully.');
     }
 }
