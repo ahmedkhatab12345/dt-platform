@@ -177,7 +177,7 @@ class ProjectController extends Controller
             'user_id' => auth()->id(),
             'action' => 'deleted',
             'model' => 'projects',
-            'description' => 'تم حذف مشروع باسم ' . $project,
+            'description' => 'تم حذف مشروع باسم ' . $project->name,
         ]);
 
         return redirect()->route('projects.index')

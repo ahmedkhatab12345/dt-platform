@@ -104,7 +104,7 @@ class GovernmentEntityController extends Controller
             'user_id' => auth()->id(),
             'action' => 'deleted',
             'model' => 'government_entities',
-            'description' => 'تم حذف الجهة الحكومية باسم ' . $government_entity,
+            'description' => 'تم حذف الجهة الحكومية باسم ' . $government_entity->name,
         ]);
 
         return redirect()->route('government_entities.index')

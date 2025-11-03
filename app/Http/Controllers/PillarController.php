@@ -106,7 +106,7 @@ class PillarController extends Controller
             'user_id' => auth()->id(),
             'action' => 'deleted',
             'model' => 'pillars',
-            'description' => 'تم حذف محور باسم ' . $pillar,
+            'description' => 'تم حذف محور باسم ' . $pillar->name,
         ]);
         return redirect()->route('pillars.index')->with('success','Pillar deleted successfully.');
     }

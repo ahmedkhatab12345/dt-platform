@@ -114,7 +114,7 @@ class StandardController extends Controller
             'user_id' => auth()->id(),
             'action' => 'deleted',
             'model' => 'standards',
-            'description' => 'تم حذف معيار باسم ' . $standard,
+            'description' => 'تم حذف معيار باسم ' . $standard->name,
         ]);
         return redirect()->route('standards.index')->with('success','Standard deleted successfully.');
     }
