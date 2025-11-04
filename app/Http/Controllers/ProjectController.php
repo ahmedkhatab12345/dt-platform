@@ -19,11 +19,15 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('read projects');
-
+    
+        $user = auth()->user();
         $entities = GovernmentEntity::orderBy('name')->get();
-
+    
         $projects = Project::query()
             ->with(['governmentEntity', 'standard', 'user'])
+            ->when($user->category_id != 6, function ($q) use ($user) {
+                $q->where('created_by', $user->id);
+            })
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = trim($request->q);
                 $q->where('name', 'like', '%' . $term . '%');
@@ -37,7 +41,7 @@ class ProjectController extends Controller
             ->latest()
             ->paginate(10)
             ->appends($request->query());
-
+    
         return view('projects.index', [
             'projects' => $projects,
             'entities' => $entities,
@@ -45,6 +49,7 @@ class ProjectController extends Controller
             'selectedStatus' => $request->input('status'),
         ]);
     }
+    
 
     public function create()
     {

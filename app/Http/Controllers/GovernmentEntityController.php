@@ -50,8 +50,10 @@ class GovernmentEntityController extends Controller
             'classification' => 'required|string',
         ]);
 
-        GovernmentEntity::create($request->only('uuid','name','classification'));
-
+        $validated = $request->only('uuid', 'name', 'classification');
+        $validated['created_by'] = auth()->id();
+    
+        GovernmentEntity::create($validated);
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'created',

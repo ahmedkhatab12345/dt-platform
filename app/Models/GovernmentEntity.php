@@ -10,7 +10,7 @@ class GovernmentEntity extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['uuid','name','classification'];
+    protected $fillable = ['uuid','name','classification','created_by'];
 
     protected $casts = [
         'classification' => GovernmentEntityClassification::class,
@@ -24,5 +24,10 @@ class GovernmentEntity extends Model
     public function projects()
     {
         return $this->hasMany(Project::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

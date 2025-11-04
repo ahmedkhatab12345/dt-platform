@@ -34,6 +34,8 @@
               <th class="px-4 py-3 w-1/6">المعرف الفريد (UUID)</th>
               <th class="px-4 py-3 w-1/3">الاسم</th>
               <th class="px-4 py-3 w-1/3">التصنيف</th>
+              <th class="px-4 py-3 w-1/6">تاريخ الإنشاء</th>
+              <th class="px-4 py-3 w-1/6">المنشئ</th>
               <th class="px-4 py-3 w-1/6 text-center">الإجراءات</th>
             </tr>
           </thead>
@@ -48,6 +50,14 @@
                     {{ $entity->classification->name ?? $entity->classification->value }}
                   </span>
                 </td>
+
+                <td class="px-4 py-3 whitespace-nowrap">
+                  {{ $entity->created_at?->format('Y-m-d') ?? '—' }}
+                </td>
+                <td class="px-4 py-3 whitespace-nowrap">
+                  {{ $entity->user?->name ?? '—' }}
+                </td>
+
                 <td class="px-4 py-3 text-center whitespace-nowrap flex justify-center gap-2">
                     @can('read projects')
                     <a href="{{ route('projects.index', ['government_entity_id' => $entity->id]) }}"
