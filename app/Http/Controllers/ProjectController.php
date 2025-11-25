@@ -54,11 +54,21 @@ class ProjectController extends Controller
     public function create()
     {
         Gate::authorize('create projects');
-        $entities = GovernmentEntity::all();
-        $standards = Standard::all();
-        return view('projects.create', compact('entities','standards'));
-    }
 
+        $user = auth()->user();
+
+        if ($user->category_id == 6) {
+            $entities = GovernmentEntity::orderBy('name')->get();
+        } else {
+            $entities = GovernmentEntity::where('created_by', $user->id)
+                ->orderBy('name')
+                ->get();
+        }
+
+        $standards = Standard::orderBy('name')->get();
+
+        return view('projects.create', compact('entities', 'standards'));
+    }
     public function store(Request $request)
     {
         Gate::authorize('create projects');
@@ -113,9 +123,20 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         Gate::authorize('update projects');
-        $entities = GovernmentEntity::all();
-        $standards = Standard::all();
-        return view('projects.edit', compact('project','entities','standards'));
+
+        $user = auth()->user();
+
+        if ($user->category_id == 6) {
+            $entities = GovernmentEntity::orderBy('name')->get();
+        } else {
+            $entities = GovernmentEntity::where('created_by', $user->id)
+                ->orderBy('name')
+                ->get();
+        }
+
+        $standards = Standard::orderBy('name')->get();
+
+        return view('projects.edit', compact('project', 'entities', 'standards'));
     }
     public function update(Request $request, Project $project)
     {

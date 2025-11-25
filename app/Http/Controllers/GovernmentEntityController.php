@@ -23,6 +23,12 @@ class GovernmentEntityController extends Controller
     {
         $query = GovernmentEntity::query();
 
+        $user = auth()->user();
+
+        if ($user->category_id != 6) {
+            $query->where('created_by', $user->id);
+        }
+
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {

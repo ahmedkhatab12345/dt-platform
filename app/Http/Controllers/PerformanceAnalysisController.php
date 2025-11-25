@@ -11,7 +11,13 @@ class PerformanceAnalysisController extends Controller
 {
     public function index(Request $request)
     {
-        $users = User::orderBy('name')->get();
+        $selectedUser = $request->user_id ?? 'all';
+
+        $usersQuery = User::orderBy('name')->where('category_id', '!=', 6);
+        if ($selectedUser !== 'all') {
+            $usersQuery->where('id', $selectedUser);
+        }
+        $users = $usersQuery->get();
 
         $minDate = Project::min('created_at');
         $maxDate = Project::max('created_at');
@@ -23,8 +29,6 @@ class PerformanceAnalysisController extends Controller
         $to = $request->to_date
             ? Carbon::parse($request->to_date)->endOfDay()
             : ($maxDate ? Carbon::parse($maxDate)->endOfDay() : now()->endOfDay());
-
-        $selectedUser = $request->user_id ?? 'all';
 
         if (!$from || !$to) {
             return view('performance_analysis.index', [

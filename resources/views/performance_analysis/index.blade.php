@@ -64,17 +64,16 @@
                                     $count = $matrix[$date][$user->id] ?? 0;
                                     $color = match(true) {
                                         $count >= 5 => 'bg-green-600 text-white',
-                                        $count >= 3 => 'bg-green-400 text-white',
-                                        $count == 2 => 'bg-yellow-300 text-gray-800',
-                                        $count == 1 => 'bg-blue-300 text-gray-900',
+                                        $count >= 3 => 'bg-green-500 text-white',
+                                        $count == 2 => 'bg-yellow-500 text-gray-900 font-bold',
+                                        $count == 1 => 'bg-blue-600 text-white font-semibold',
                                         default => 'bg-gray-100 text-gray-400'
                                     };
                                 @endphp
-                                <td class="px-5 py-3 border">
-                                    <span class="inline-block w-10 h-10 leading-10 rounded-lg font-bold {{ $color }}">
-                                        {{ $count }}
-                                    </span>
+                                <td class="px-5 py-3 border font-semibold text-gray-900 text-lg">
+                                    {{ $count }}
                                 </td>
+                                
                             @endforeach
                         </tr>
                     @empty
