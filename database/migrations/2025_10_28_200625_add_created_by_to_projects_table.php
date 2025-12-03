@@ -6,23 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+        if (Schema::hasColumn('government_entities', 'uuid')) {
+            return;
+        }
+
+        Schema::table('government_entities', function (Blueprint $table) {
+            $table->string('uuid')->unique()->after('id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('projects', function (Blueprint $table) {
-            //
+        if (!Schema::hasColumn('government_entities', 'uuid')) {
+            return;
+        }
+
+        Schema::table('government_entities', function (Blueprint $table) {
+            $table->dropUnique(['uuid']);
+            $table->dropColumn('uuid');
         });
     }
 };

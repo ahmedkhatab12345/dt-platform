@@ -25,6 +25,11 @@ class PermissionSeeder extends Seeder
             'tools',
             'assignments',
             'performance_analysis',
+            'platforms',
+            'partnerships',
+            'events',
+            'frameworks',
+            'assessments',
         ];
 
         $actions = ['create', 'read', 'update', 'delete'];

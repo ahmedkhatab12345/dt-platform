@@ -6,21 +6,28 @@
 @section('content')
 <div class="bg-white rounded-xl shadow p-6">
 
-  {{-- العنوان + زر الإضافة --}}
-  <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-      <i data-feather="folder" class="w-6 h-6 text-indigo-600"></i>
-      المشاريع
-    </h2>
-
+  {{-- أزرار الإدارة الرئيسية --}}
+  <div class="flex items-center gap-4 mb-6">
+    {{-- زر الإضافة --}}
     @can('create projects')
-      <a href="{{ route('projects.create') }}"
-         class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
-        + إضافة مشروع
-      </a>
+    <a href="{{ route('projects.create') }}"
+      class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+      + إضافة مشروع
+    </a>
     @endcan
+
+    {{-- زر التقرير --}}
+    <a href="{{ route('reports.projects_planned') }}"
+    class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700
+            flex items-center gap-2 text-sm">
+
+      <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+
+      <span>تقرير المشاريع المخطط لها</span>
+  </a>
   </div>
 
+  {{-- فلاتر البحث --}}
   <form method="GET" action="{{ route('projects.index') }}" class="mb-4">
     <div class="flex flex-col md:flex-row items-start md:items-end gap-3">
 
@@ -58,7 +65,8 @@
         </select>
       </div>      
 
-      <div class="flex items-center gap-2">
+      {{-- زر البحث + إعادة التعيين --}}
+      <div class="flex items-center gap-2 flex-shrink-0">
         <button type="submit"
                 class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
           بحث / تصفية
@@ -71,10 +79,8 @@
           </a>
         @endif
       </div>
-
     </div>
   </form>
-
   {{-- رسائل النجاح --}}
   @if(session('success'))
     <div class="mb-4 p-3 bg-green-100 text-green-700 rounded text-sm">

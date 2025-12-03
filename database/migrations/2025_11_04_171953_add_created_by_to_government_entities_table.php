@@ -8,6 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasColumn('government_entities', 'created_by')) {
+            return;
+        }
+
         Schema::table('government_entities', function (Blueprint $table) {
             $table->foreignId('created_by')
                 ->nullable()
@@ -19,6 +23,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (!Schema::hasColumn('government_entities', 'created_by')) {
+            return;
+        }
+        
         Schema::table('government_entities', function (Blueprint $table) {
             $table->dropForeign(['created_by']);
             $table->dropColumn('created_by');
