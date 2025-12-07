@@ -21,7 +21,7 @@ class GovernmentEntityController extends Controller
 
     public function index(Request $request)
     {
-        $query = GovernmentEntity::query();
+        $query = GovernmentEntity::with(['strategy', 'goals']);
 
         $user = auth()->user();
 
@@ -33,7 +33,7 @@ class GovernmentEntityController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('uuid', 'like', "%{$search}%")
-                ->orWhere('name', 'like', "%{$search}%");
+                    ->orWhere('name', 'like', "%{$search}%");
             });
         }
 
@@ -54,12 +54,30 @@ class GovernmentEntityController extends Controller
             'uuid' => 'required|string|max:255|unique:government_entities,uuid',
             'name' => 'required|string|max:255',
             'classification' => 'required|string',
+            'mission' => 'nullable|string',
+            'vision' => 'nullable|string',
+            'goals' => 'nullable|array',
+            'goals.*' => 'nullable|string|max:500',
         ]);
 
         $validated = $request->only('uuid', 'name', 'classification');
         $validated['created_by'] = auth()->id();
-    
-        GovernmentEntity::create($validated);
+
+        $entity = GovernmentEntity::create($validated);
+
+        $entity->strategy()->create([
+            'mission' => $request->mission,
+            'vision' => $request->vision,
+        ]);
+
+        if ($request->filled('goals')) {
+            foreach ($request->goals as $goal) {
+                if ($goal) {
+                    $entity->goals()->create(['goal' => $goal]);
+                }
+            }
+        }
+
         ActivityLog::create([
             'user_id' => auth()->id(),
             'action' => 'created',
@@ -67,7 +85,8 @@ class GovernmentEntityController extends Controller
             'description' => 'تم إنشاء جهة حكومية جديدة باسم ' . $request->name,
         ]);
 
-        return redirect()->route('government_entities.index')->with('success','Entity created successfully.');
+        return redirect()->route('government_entities.index')
+            ->with('success', 'Entity created successfully.');
     }
 
     public function edit(GovernmentEntity $government_entity)
@@ -82,12 +101,33 @@ class GovernmentEntityController extends Controller
     public function update(Request $request, GovernmentEntity $government_entity)
     {
         $request->validate([
-            'uuid' => ['required','string','max:255', Rule::unique('government_entities','uuid')->ignore($government_entity->id)],
+            'uuid' => ['required', 'string', 'max:255', Rule::unique('government_entities', 'uuid')->ignore($government_entity->id)],
             'name' => 'required|string|max:255',
             'classification' => 'required|string',
+            'mission' => 'nullable|string',
+            'vision' => 'nullable|string',
+            'goals' => 'nullable|array',
+            'goals.*' => 'nullable|string|max:500',
         ]);
 
-        $government_entity->update($request->only('uuid','name','classification'));
+        $government_entity->update($request->only('uuid', 'name', 'classification'));
+
+        $government_entity->strategy()->updateOrCreate(
+            ['government_entity_id' => $government_entity->id],
+            [
+                'mission' => $request->mission,
+                'vision' => $request->vision,
+            ]
+        );
+
+        $government_entity->goals()->delete();
+        if ($request->filled('goals')) {
+            foreach ($request->goals as $goal) {
+                if ($goal) {
+                    $government_entity->goals()->create(['goal' => $goal]);
+                }
+            }
+        }
 
         ActivityLog::create([
             'user_id' => auth()->id(),
@@ -96,7 +136,13 @@ class GovernmentEntityController extends Controller
             'description' => 'تم تعديل الجهة الحكومية باسم ' . $government_entity->name,
         ]);
 
-        return redirect()->route('government_entities.index')->with('success','Entity updated successfully.');
+        return redirect()->route('government_entities.index')
+            ->with('success', 'Entity updated successfully.');
+    }
+
+    public function show(GovernmentEntity $government_entity)
+    {
+        return view('government_entities.show', compact('government_entity'));
     }
 
     public function destroy(GovernmentEntity $government_entity)
@@ -105,6 +151,7 @@ class GovernmentEntityController extends Controller
             return redirect()->route('government_entities.index')
                 ->with('error', 'This government entity cannot be deleted because it is associated with assignments.');
         }
+
 
         $government_entity->delete();
 
@@ -116,6 +163,6 @@ class GovernmentEntityController extends Controller
         ]);
 
         return redirect()->route('government_entities.index')
-            ->with('success','Government entity deleted successfully.');
+            ->with('success', 'Government entity deleted successfully.');
     }
 }

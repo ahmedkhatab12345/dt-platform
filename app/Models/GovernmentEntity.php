@@ -30,4 +30,14 @@ class GovernmentEntity extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function strategy()
+    {
+        return $this->hasOne(Strategy::class);
+    }
+
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
+    }
 }

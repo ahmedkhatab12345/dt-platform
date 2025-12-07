@@ -4,21 +4,38 @@
 @php($pageHeading = 'إضافة جهة حكومية')
 
 @section('content')
-<div class="bg-white shadow rounded-xl p-6 max-w-xl mx-auto">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">إضافة جهة حكومية</h2>
 
-    <form method="POST" action="{{ route('government_entities.store') }}" class="space-y-5">
+<div class="bg-white shadow rounded-2xl p-8 max-w-3xl mx-auto">
+
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+        <i data-feather="plus-circle" class="w-6 h-6 text-indigo-600"></i>
+        إضافة جهة حكومية
+    </h2>
+
+    {{-- رسائل التحقق --}}
+    @if ($errors->any())
+        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded-xl border border-red-200">
+            <ul class="list-disc list-inside text-sm">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('government_entities.store') }}" class="space-y-7">
         @csrf
 
+        {{-- UUID --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">المعرف الفريد (UUID)</label>
             <input type="text" name="uuid" value="{{ old('uuid') }}" required
                    class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500">
-          </div>
+        </div>
 
         {{-- الاسم --}}
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">الاسم</label>
+            <label class="block text-sm font-medium text-gray-700 mb-1">اسم الجهة</label>
             <input type="text" name="name" value="{{ old('name') }}"
                    class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500"
                    required>
@@ -27,25 +44,85 @@
         {{-- التصنيف --}}
         <div>
             <label class="block text-sm font-medium text-gray-700 mb-1">التصنيف</label>
-            <select name="classification" class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500">
+            <select name="classification"
+                    class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500">
                 @foreach($classifications as $classification)
-                    <option value="{{ $classification->value }}" {{ old('classification') == $classification->value ? 'selected' : '' }}>
+                    <option value="{{ $classification->value }}"
+                        {{ old('classification') == $classification->value ? 'selected' : '' }}>
                         {{ $classification->name }}
                     </option>
                 @endforeach
             </select>
         </div>
 
+        {{-- الرسالة --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">الرسالة (Mission)</label>
+            <textarea name="mission"
+                      class="w-full border-gray-300 rounded-lg px-3 py-2 h-32 focus:border-indigo-500 focus:ring-indigo-500">{{ old('mission') }}</textarea>
+        </div>
+
+        {{-- الرؤية --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">الرؤية (Vision)</label>
+            <textarea name="vision"
+                      class="w-full border-gray-300 rounded-lg px-3 py-2 h-32 focus:border-indigo-500 focus:ring-indigo-500">{{ old('vision') }}</textarea>
+        </div>
+
+        {{-- الأهداف --}}
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-3">الأهداف</label>
+
+            <div id="goals-wrapper" class="space-y-3">
+                <div class="flex gap-2">
+                    <input type="text" name="goals[]" placeholder="اكتب الهدف..."
+                           class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500">
+
+                    <button type="button" onclick="addGoal()"
+                            class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                        +
+                    </button>
+                </div>
+            </div>
+        </div>
+
         {{-- الأزرار --}}
-        <div class="flex justify-end gap-3">
-            <a href="{{ route('government_entities.index') }}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
+        <div class="flex justify-end gap-3 mt-6">
+            <a href="{{ route('government_entities.index') }}"
+               class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
                 إلغاء
             </a>
+
             <button type="submit"
                     class="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
                 حفظ
             </button>
         </div>
+
     </form>
 </div>
+
+<script>
+    function addGoal() {
+        const wrapper = document.getElementById('goals-wrapper');
+        const row = document.createElement('div');
+        row.classList.add('flex', 'gap-2');
+
+        row.innerHTML = `
+            <input type="text" name="goals[]" placeholder="اكتب الهدف..."
+                   class="w-full border-gray-300 rounded-lg px-3 py-2 focus:border-indigo-500 focus:ring-indigo-500">
+
+            <button type="button"
+                    onclick="this.parentElement.remove()"
+                    class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                -
+            </button>
+        `;
+
+        wrapper.appendChild(row);
+    }
+
+    if (window.feather) { window.feather.replace(); }
+</script>
+
 @endsection

@@ -55,6 +55,15 @@
                 </td>
 
                 <td class="px-4 py-3 text-center whitespace-nowrap flex justify-center gap-2">
+
+                    @can('read government_entities')
+                    <a href="{{ route('government_entities.show', $entity->id) }}"
+                      class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs"
+                      title="عرض تفاصيل الجهة">
+                      عرض
+                    </a>
+                    @endcan
+                    
                     @can('read projects')
                     <a href="{{ route('projects.index', ['government_entity_id' => $entity->id]) }}"
                        class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-xs"
