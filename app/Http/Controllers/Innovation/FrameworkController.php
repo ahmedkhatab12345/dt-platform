@@ -20,16 +20,10 @@ class FrameworkController extends Controller
     {
         Gate::authorize('read frameworks');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         $frameworks = InnovationFramework::query()
             ->with(['governmentEntity', 'user'])
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = trim($request->q);
                 $q->where(function ($qq) use ($term) {
@@ -37,7 +31,8 @@ class FrameworkController extends Controller
                        ->orWhere('details', 'like', "%{$term}%");
                 });
             })
-            ->when($request->filled('government_entity_id'),
+            ->when(
+                $request->filled('government_entity_id'),
                 fn ($q) => $q->where('government_entity_id', $request->integer('government_entity_id'))
             )
             ->latest()
@@ -56,12 +51,7 @@ class FrameworkController extends Controller
     {
         Gate::authorize('create frameworks');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.frameworks.create', compact('entities'));
     }
@@ -95,15 +85,7 @@ class FrameworkController extends Controller
     {
         Gate::authorize('update frameworks');
 
-        $user = auth()->user();
-        if ($user->category_id != 6 && $framework->created_by != $user->id) {
-            abort(403);
-        }
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.frameworks.edit', compact('framework', 'entities'));
     }
@@ -111,11 +93,6 @@ class FrameworkController extends Controller
     public function update(Request $request, InnovationFramework $framework)
     {
         Gate::authorize('update frameworks');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $framework->created_by != $user->id) {
-            abort(403);
-        }
 
         $validated = $request->validate([
             'government_entity_id' => 'required|exists:government_entities,id',
@@ -139,11 +116,6 @@ class FrameworkController extends Controller
     public function destroy(InnovationFramework $framework)
     {
         Gate::authorize('delete frameworks');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $framework->created_by != $user->id) {
-            abort(403);
-        }
 
         $title = $framework->framework_name;
         $framework->delete();

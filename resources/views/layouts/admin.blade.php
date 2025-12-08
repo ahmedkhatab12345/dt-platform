@@ -463,5 +463,49 @@
       }
     });
   </script>
+
+  {{-- TinyMCE Editor --}}
+<script src="https://cdn.jsdelivr.net/npm/tinymce@5.10.7/tinymce.min.js"></script>
+
+<script>
+  tinymce.init({
+    selector: 'textarea.rich-editor',
+    height: 300,
+    directionality: "rtl",
+    language: "ar",
+
+    plugins: 'lists link table directionality textcolor colorpicker',
+
+    menubar: false,
+
+    toolbar: `
+      undo redo |
+      fontselect fontsizeselect |
+      forecolor backcolor |
+      bold italic underline |
+      alignleft aligncenter alignright alignjustify |
+      bullist numlist |
+      link table |
+      ltr rtl
+    `,
+
+    font_size_formats: "12px 14px 16px 18px 20px 24px 28px 32px 36px 48px",
+
+    font_family_formats: `
+      Tajawal=tajawal,sans-serif;
+      Cairo=cairo,sans-serif;
+      Arial=arial,helvetica,sans-serif;
+      Times New Roman=times new roman,times;
+      Traditional Arabic='Traditional Arabic';
+    `,
+
+    content_style: `
+      body {
+        font-family: 'Tajawal', sans-serif;
+        font-size: 14px;
+      }
+    `
+  });
+</script>
 </body>
 </html>

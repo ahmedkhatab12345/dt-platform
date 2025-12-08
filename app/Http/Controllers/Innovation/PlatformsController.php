@@ -20,25 +20,20 @@ class PlatformsController extends Controller
     {
         Gate::authorize('read platforms');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         $platforms = InnovationPlatform::query()
             ->with(['governmentEntity', 'user'])
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = trim($request->q);
                 $q->where(function ($qq) use ($term) {
                     $qq->where('platform_name', 'like', "%{$term}%")
-                       ->orWhere('platform_function', 'like', "%{$term}%")
-                       ->orWhere('platform_url', 'like', "%{$term}%");
+                    ->orWhere('platform_function', 'like', "%{$term}%")
+                    ->orWhere('platform_url', 'like', "%{$term}%");
                 });
             })
-            ->when($request->filled('government_entity_id'),
+            ->when(
+                $request->filled('government_entity_id'),
                 fn ($q) => $q->where('government_entity_id', $request->integer('government_entity_id'))
             )
             ->latest()
@@ -57,12 +52,7 @@ class PlatformsController extends Controller
     {
         Gate::authorize('create platforms');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.platforms.create', compact('entities'));
     }
@@ -97,29 +87,15 @@ class PlatformsController extends Controller
     public function edit(InnovationPlatform $platform)
     {
         Gate::authorize('update platforms');
-
-        $user = auth()->user();
-
-        if ($user->category_id != 6 && $platform->created_by != $user->id) {
-            abort(403);
-        }
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
-
+    
+        $entities = GovernmentEntity::orderBy('name')->get();
+    
         return view('innovation.platforms.edit', compact('platform', 'entities'));
-    }
+    }    
 
     public function update(Request $request, InnovationPlatform $platform)
     {
         Gate::authorize('update platforms');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $platform->created_by != $user->id) {
-            abort(403);
-        }
 
         $validated = $request->validate([
             'government_entity_id' => 'required|exists:government_entities,id',
@@ -145,11 +121,6 @@ class PlatformsController extends Controller
     public function destroy(InnovationPlatform $platform)
     {
         Gate::authorize('delete platforms');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $platform->created_by != $user->id) {
-            abort(403);
-        }
 
         $name = $platform->platform_name;
         $platform->delete();

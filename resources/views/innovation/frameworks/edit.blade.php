@@ -53,12 +53,13 @@
         {{-- التفاصيل --}}
         <div>
             <label class="block font-medium text-sm text-gray-700 mb-1">التفاصيل</label>
+        
             <textarea name="details"
-                      class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-                      rows="6"
-                      placeholder="أدخل تفاصيل الإطار أو المنهجية...">{{ old('details', $framework->details) }}</textarea>
+                    class="rich-editor"
+                    placeholder="أدخل تفاصيل الإطار أو المنهجية...">{{ old('details', $framework->details) }}</textarea>
+        
             @error('details')
-                <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
+            <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>
 

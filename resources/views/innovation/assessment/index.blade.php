@@ -116,11 +116,10 @@
               </span>
             </td>
           
-            {{-- الملخص --}}
             <td class="px-4 py-3 break-words max-w-[320px]">
-                {{ \Illuminate\Support\Str::limit($row->summary ?? '', 120, '...') ?: '—' }}
-            </td>
-
+              {!! Str::limit(strip_tags($row->summary), 120, '...') !!}
+          </td>
+          
             {{-- التاريخ --}}
             <td class="px-4 py-3 whitespace-nowrap">
                 {{ $row->created_at?->format('Y-m-d') }}

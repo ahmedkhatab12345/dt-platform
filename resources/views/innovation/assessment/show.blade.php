@@ -19,7 +19,7 @@
 
         {{-- معلومات الجهة --}}
         <div class="mb-10">
-            <h3 class="font-semibold text-xl text-gray-700 mb-4"> معلومات الجهة</h3>
+            <h3 class="font-semibold text-xl text-gray-700 mb-4">معلومات الجهة</h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -42,7 +42,7 @@
 
         {{-- مستوى الفهم --}}
         <div class="mb-10">
-            <h3 class="font-semibold text-xl text-gray-700 mb-4"> مستوى الفهم</h3>
+            <h3 class="font-semibold text-xl text-gray-700 mb-4">مستوى الفهم</h3>
 
             <span class="px-4 py-1.5 text-white rounded-lg text-sm
                 @if($assessment->understanding_level === 'high') bg-green-600
@@ -65,33 +65,33 @@
 
             {{-- الملخص --}}
             <div>
-                <h3 class="font-semibold text-xl text-gray-700 mb-3"> الملخص</h3>
-                <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl leading-relaxed text-gray-800">
-                    {{ $assessment->summary ?: '—' }}
+                <h3 class="font-semibold text-xl text-gray-700 mb-3">الملخص</h3>
+                <div class="bg-gray-50 border border-gray-200 p-5 rounded-xl leading-relaxed text-gray-800 prose prose-indigo max-w-none">
+                    {!! $assessment->summary ?: '—' !!}
                 </div>
             </div>
 
             {{-- نقاط القوة --}}
             <div>
-                <h3 class="font-semibold text-xl text-gray-700 mb-3"> نقاط القوة</h3>
-                <div class="bg-green-50 border border-green-200 p-5 rounded-xl leading-relaxed text-gray-800">
-                    {{ $assessment->strengths ?: '—' }}
+                <h3 class="font-semibold text-xl text-gray-700 mb-3">نقاط القوة</h3>
+                <div class="bg-green-50 border border-green-200 p-5 rounded-xl leading-relaxed text-gray-800 prose max-w-none">
+                    {!! $assessment->strengths ?: '—' !!}
                 </div>
             </div>
 
             {{-- نقاط الضعف --}}
             <div>
-                <h3 class="font-semibold text-xl text-gray-700 mb-3"> نقاط الضعف</h3>
-                <div class="bg-red-50 border border-red-200 p-5 rounded-xl leading-relaxed text-gray-800">
-                    {{ $assessment->weaknesses ?: '—' }}
+                <h3 class="font-semibold text-xl text-gray-700 mb-3">نقاط الضعف</h3>
+                <div class="bg-red-50 border border-red-200 p-5 rounded-xl leading-relaxed text-gray-800 prose max-w-none">
+                    {!! $assessment->weaknesses ?: '—' !!}
                 </div>
             </div>
 
             {{-- التوصية --}}
             <div>
-                <h3 class="font-semibold text-xl text-gray-700 mb-3"> التوصية</h3>
-                <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl leading-relaxed text-gray-800">
-                    {{ $assessment->recommendation ?: '—' }}
+                <h3 class="font-semibold text-xl text-gray-700 mb-3">التوصية</h3>
+                <div class="bg-blue-50 border border-blue-200 p-5 rounded-xl leading-relaxed text-gray-800 prose max-w-none">
+                    {!! $assessment->recommendation ?: '—' !!}
                 </div>
             </div>
 

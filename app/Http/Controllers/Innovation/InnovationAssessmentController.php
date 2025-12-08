@@ -20,16 +20,10 @@ class InnovationAssessmentController extends Controller
     {
         Gate::authorize('read assessments');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         $assessments = InnovationAssessment::query()
             ->with(['governmentEntity', 'user'])
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = trim($request->q);
                 $q->where(function ($sub) use ($term) {
@@ -39,7 +33,8 @@ class InnovationAssessmentController extends Controller
                         ->orWhere('recommendation', 'like', "%{$term}%");
                 });
             })
-            ->when($request->filled('government_entity_id'),
+            ->when(
+                $request->filled('government_entity_id'),
                 fn ($q) => $q->where('government_entity_id', $request->integer('government_entity_id'))
             )
             ->latest()
@@ -55,11 +50,6 @@ class InnovationAssessmentController extends Controller
     {
         Gate::authorize('read assessments');
 
-        $user = auth()->user();
-        if ($user->category_id != 6 && $assessment->created_by != $user->id) {
-            abort(403);
-        }
-
         return view('innovation.assessment.show', compact('assessment'));
     }
 
@@ -67,12 +57,7 @@ class InnovationAssessmentController extends Controller
     {
         Gate::authorize('create assessments');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.assessment.create', compact('entities'));
     }
@@ -109,15 +94,7 @@ class InnovationAssessmentController extends Controller
     {
         Gate::authorize('update assessments');
 
-        $user = auth()->user();
-        if ($user->category_id != 6 && $assessment->created_by != $user->id) {
-            abort(403);
-        }
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.assessment.edit', compact('assessment', 'entities'));
     }
@@ -125,11 +102,6 @@ class InnovationAssessmentController extends Controller
     public function update(Request $request, InnovationAssessment $assessment)
     {
         Gate::authorize('update assessments');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $assessment->created_by != $user->id) {
-            abort(403);
-        }
 
         $validated = $request->validate([
             'government_entity_id' => 'required|exists:government_entities,id',
@@ -156,12 +128,7 @@ class InnovationAssessmentController extends Controller
     public function destroy(InnovationAssessment $assessment)
     {
         Gate::authorize('delete assessments');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $assessment->created_by != $user->id) {
-            abort(403);
-        }
-
+        
         $assessment->delete();
 
         ActivityLog::create([

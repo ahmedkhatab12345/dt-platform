@@ -22,22 +22,19 @@ class EventController extends Controller
 
         $user = auth()->user();
 
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         $events = InnovationEvent::query()
             ->with(['governmentEntity', 'user'])
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
             ->when($request->filled('q'), function ($q) use ($request) {
                 $term = trim($request->q);
                 $q->where(function ($qq) use ($term) {
                     $qq->where('event_title', 'like', "%{$term}%")
-                       ->orWhere('details', 'like', "%{$term}%");
+                    ->orWhere('details', 'like', "%{$term}%");
                 });
             })
-            ->when($request->filled('government_entity_id'),
+            ->when(
+                $request->filled('government_entity_id'),
                 fn ($q) => $q->where('government_entity_id', $request->integer('government_entity_id'))
             )
             ->latest()
@@ -56,12 +53,7 @@ class EventController extends Controller
     {
         Gate::authorize('create events');
 
-        $user = auth()->user();
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.events.create', compact('entities'));
     }
@@ -95,15 +87,7 @@ class EventController extends Controller
     {
         Gate::authorize('update events');
 
-        $user = auth()->user();
-        if ($user->category_id != 6 && $event->created_by != $user->id) {
-            abort(403);
-        }
-
-        $entities = GovernmentEntity::query()
-            ->when($user->category_id != 6, fn ($q) => $q->where('created_by', $user->id))
-            ->orderBy('name')
-            ->get();
+        $entities = GovernmentEntity::orderBy('name')->get();
 
         return view('innovation.events.edit', compact('event', 'entities'));
     }
@@ -111,11 +95,6 @@ class EventController extends Controller
     public function update(Request $request, InnovationEvent $event)
     {
         Gate::authorize('update events');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $event->created_by != $user->id) {
-            abort(403);
-        }
 
         $validated = $request->validate([
             'government_entity_id' => 'required|exists:government_entities,id',
@@ -139,11 +118,6 @@ class EventController extends Controller
     public function destroy(InnovationEvent $event)
     {
         Gate::authorize('delete events');
-
-        $user = auth()->user();
-        if ($user->category_id != 6 && $event->created_by != $user->id) {
-            abort(403);
-        }
 
         $title = $event->event_title;
         $event->delete();

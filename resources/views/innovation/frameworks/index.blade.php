@@ -86,8 +86,8 @@
             </td>
 
             <td class="px-4 py-3 break-words max-w-[320px]">
-              {{ \Illuminate\Support\Str::limit($row->details ?? '', 120, '...') ?: '—' }}
-            </td>
+              {{ Str::limit(strip_tags($row->details), 120, '...') ?: '—' }}
+          </td>          
 
             <td class="px-4 py-3 whitespace-nowrap">{{ $row->created_at?->format('Y-m-d') ?? '—' }}</td>
             <td class="px-4 py-3 whitespace-nowrap">{{ $row->user?->name ?? '—' }}</td>

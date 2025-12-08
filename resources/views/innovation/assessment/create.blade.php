@@ -48,40 +48,28 @@
     {{-- الملخص --}}
     <div>
       <label class="block font-medium text-sm text-gray-700 mb-1">الملخص</label>
-      <textarea name="summary"
-                rows="4"
-                class="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
-                placeholder="اكتب ملخص تقييم الابتكار...">{{ old('summary') }}</textarea>
+      <textarea name="summary" class="rich-editor">{{ old('summary') }}</textarea>
       @error('summary') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
 
     {{-- القوة --}}
     <div>
       <label class="block font-medium text-sm text-gray-700 mb-1">نقاط القوة</label>
-      <textarea name="strengths"
-                rows="4"
-                class="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
-                placeholder="اكتب نقاط القوة...">{{ old('strengths') }}</textarea>
+      <textarea name="strengths" class="rich-editor">{{ old('strengths') }}</textarea>
       @error('strengths') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
 
     {{-- الضعف --}}
     <div>
       <label class="block font-medium text-sm text-gray-700 mb-1">نقاط الضعف</label>
-      <textarea name="weaknesses"
-                rows="4"
-                class="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
-                placeholder="اكتب نقاط الضعف...">{{ old('weaknesses') }}</textarea>
+      <textarea name="weaknesses" class="rich-editor">{{ old('weaknesses') }}</textarea>
       @error('weaknesses') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
 
     {{-- التوصية --}}
     <div>
       <label class="block font-medium text-sm text-gray-700 mb-1">التوصية</label>
-      <textarea name="recommendation"
-                rows="4"
-                class="w-full border-gray-300 rounded-lg shadow-sm px-3 py-2"
-                placeholder="اكتب التوصية...">{{ old('recommendation') }}</textarea>
+      <textarea name="recommendation" class="rich-editor">{{ old('recommendation') }}</textarea>
       @error('recommendation') <p class="text-red-600 text-xs mt-1">{{ $message }}</p> @enderror
     </div>
 
@@ -98,6 +86,7 @@
   </form>
 </div>
 
+{{-- Tom Select --}}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   new TomSelect("#government_entity_id", {
