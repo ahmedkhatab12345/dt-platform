@@ -323,8 +323,9 @@
         
         @can('read performance_analysis')
         <a href="{{ route('performance_analysis.index') }}" data-title="تحليل الأداء"
-           class="flex flex-row-reverse items-center justify-end gap-2 px-3 py-2 rounded-lg hover:bg-indigo-700/70 transition {{ request()->routeIs('innovation.frameworks.*') ? 'bg-indigo-700' : '' }}">
-          <i data-feather="bar-chart-2" class="w-4 h-4"></i> <span>تحليل الأداء</span>
+          class="flex flex-row-reverse items-center justify-end gap-2 px-3 py-2 rounded-lg hover:bg-indigo-700/70 transition {{ request()->routeIs('performance_analysis.*') ? 'bg-indigo-700' : '' }}">
+          <i data-feather="bar-chart-2" class="w-4 h-4"></i>
+          <span>تحليل الأداء</span>
         </a>
         @endcan
       </nav>

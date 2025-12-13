@@ -68,6 +68,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/performance_analysis/export', [PerformanceAnalysisController::class, 'export'])
     ->name('performance_analysis.export');
 
+    Route::get('/performance-analysis/{report}', [PerformanceAnalysisController::class, 'report'])
+    ->name('performance_analysis.report')
+    ->where('report', '[A-Za-z0-9\._-]+');
+
     Route::resource('performance_analysis', PerformanceAnalysisController::class)->except(['show']);
 
     Route::get('/reports/projects-planned', [ReportsController::class, 'plannedProjects'])
