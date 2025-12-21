@@ -9,17 +9,17 @@
     <i data-feather="plus-circle" class="w-6 h-6 text-indigo-600"></i>
     إضافة فعالية/مبادرة جديدة
   </h2>
+
   @if (session('success'))
-  <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded mb-4">
       {{ session('success') }}
-  </div>
+    </div>
   @endif
 
   <form method="POST" action="{{ route('innovation.events.store') }}" class="space-y-6">
     @csrf
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {{-- الجهة الحكومية --}}
       <div>
         <label class="block font-medium text-sm text-gray-700 mb-1">
           الجهة الحكومية <span class="text-red-600">*</span>
@@ -38,39 +38,34 @@
         @enderror
       </div>
 
-      {{-- عنوان الفعالية --}}
       <div>
         <label class="block font-medium text-sm text-gray-700 mb-1">
           عنوان الفعالية/المبادرة <span class="text-red-600">*</span>
         </label>
-        <input type="text" name="event_title" value="{{ old('event_title') }}"
-               class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-               placeholder="أدخل عنوان الفعالية أو المبادرة">
+
+        <textarea name="event_title" rows="1"
+                  class="autogrow w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 resize-none overflow-hidden"
+                  placeholder="أدخل عنوان الفعالية أو المبادرة">{{ old('event_title') }}</textarea>
+
         @error('event_title')
           <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
         @enderror
       </div>
     </div>
 
-    {{-- التفاصيل --}}
     <div>
       <label class="block font-medium text-sm text-gray-700 mb-1">التفاصيل</label>
-
       <textarea name="details"
                 class="rich-editor"
                 placeholder="أدخل تفاصيل الفعالية أو المبادرة...">{{ old('details') }}</textarea>
-
       @error('details')
         <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
       @enderror
     </div>
 
-    {{-- أزرار التحكم --}}
     <div class="flex justify-end gap-3">
       <a href="{{ route('innovation.events.index') }}"
-         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">
-         إلغاء
-      </a>
+         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">إلغاء</a>
       <button type="submit"
               class="px-6 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
         حفظ الفعالية/المبادرة

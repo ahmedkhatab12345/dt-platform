@@ -465,6 +465,20 @@
     });
   </script>
 
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const autoGrow = (el) => {
+        el.style.height = 'auto';
+        el.style.height = (el.scrollHeight) + 'px';
+      };
+    
+      document.querySelectorAll('textarea.autogrow').forEach((el) => {
+        autoGrow(el);
+        el.addEventListener('input', () => autoGrow(el));
+      });
+    });
+  </script>  
+
   {{-- TinyMCE Editor --}}
 <script src="https://cdn.jsdelivr.net/npm/tinymce@5.10.7/tinymce.min.js"></script>
 

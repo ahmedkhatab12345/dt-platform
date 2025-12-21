@@ -43,9 +43,14 @@
         <label class="block font-medium text-sm text-gray-700 mb-1">
           اسم المنصة <span class="text-red-600">*</span>
         </label>
-        <input type="text" name="platform_name" value="{{ old('platform_name') }}"
-               class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-               placeholder="أدخل اسم المنصة">
+
+        <textarea
+          name="platform_name"
+          rows="1"
+          class="autogrow w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 resize-none overflow-hidden"
+          placeholder="أدخل اسم المنصة"
+        >{{ old('platform_name') }}</textarea>
+
         @error('platform_name')
           <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
         @enderror
@@ -54,9 +59,14 @@
       {{-- وظيفة المنصة --}}
       <div>
         <label class="block font-medium text-sm text-gray-700 mb-1">وظيفة المنصة</label>
-        <input type="text" name="platform_function" value="{{ old('platform_function') }}"
-               class="w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2"
-               placeholder="أدخل وظيفة المنصة">
+
+        <textarea
+          name="platform_function"
+          rows="1"
+          class="autogrow w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-lg shadow-sm px-3 py-2 resize-none overflow-hidden"
+          placeholder="أدخل وظيفة المنصة"
+        >{{ old('platform_function') }}</textarea>
+
         @error('platform_function')
           <p class="text-red-600 text-xs mt-1">{{ $message }}</p>
         @enderror

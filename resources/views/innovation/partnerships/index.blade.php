@@ -84,11 +84,17 @@
             <td class="px-4 py-3 font-semibold text-gray-800 break-words max-w-[280px]">
               {{ $row->agreement_title ?? '—' }}
             </td>
-
             <td class="px-4 py-3 break-words max-w-[320px]">
-              {{ Str::limit(strip_tags($row->details), 120, '...') ?: '—' }}
-          </td>          
-
+              {{ Str::limit(
+                    trim(preg_replace('/\s+/u',' ',
+                      str_replace("\xC2\xA0",' ',
+                        strip_tags(html_entity_decode($row->details ?? '', ENT_QUOTES, 'UTF-8'))
+                      )
+                    )),
+                  120, '...'
+                ) ?: '—'
+              }}
+            </td>
             <td class="px-4 py-3 whitespace-nowrap">{{ $row->created_at?->format('Y-m-d') ?? '—' }}</td>
             <td class="px-4 py-3 whitespace-nowrap">{{ $row->user?->name ?? '—' }}</td>
 
